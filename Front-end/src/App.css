@@ -1,0 +1,16 @@
+.navbar{
+  display: flex;
+  justify-content: space-between;
+}
+header{
+  margin: 12px;
+}
+.afterNav{
+  display: flex;
+  gap: 20px;
+}
+.endNav{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
