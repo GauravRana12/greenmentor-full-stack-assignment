@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const notify = (msg) => toast.success(msg);
 const noti = (msg) => toast.error(msg);
-  const BaseUrl="http://localhost:8080";
+  const BaseUrl="https://greenmentor-back-end-deployment-production.up.railway.app";
 
 export const loggingIn=(user,navigate)=>async (dispatch)=>{
     dispatch({type:LOGIN_PENDING})

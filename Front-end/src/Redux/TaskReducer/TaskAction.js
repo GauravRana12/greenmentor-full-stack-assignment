@@ -1,6 +1,6 @@
 import axios from "axios";
 import { GET_MY_TASK, GET_SINGLE, GET_TASK_FAILED, GET_TASK_PENDING, GET_TASK_SUCCESSFUL, POST_TASK } from "./TaskActiontype";
-const BaseUrl="http://localhost:8080";
+const BaseUrl="https://greenmentor-back-end-deployment-production.up.railway.app";
 
 export const GetallTask=async (dispatch)=>{
     dispatch({type:GET_TASK_PENDING})
