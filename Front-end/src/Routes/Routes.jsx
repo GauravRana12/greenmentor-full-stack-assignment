@@ -6,6 +6,8 @@ import Register from '../Pages/Register'
 import Profile from '../Pages/Profile'
 import Create from '../Pages/Create'
 import PrivateRoute from './PrivateRoute'
+import MyTask from '../Pages/MyTask'
+import Edit from '../Pages/Edit'
 
 const AllRoutes = () => {
   return (
@@ -14,7 +16,13 @@ const AllRoutes = () => {
         <Route path='/login' element={<Login />}/>
         <Route path='/register' element={<Register />}/>
         <Route path='/profile' element={<Profile />}/>
-        
+        <Route path='/edit/:id' element={<PrivateRoute>
+          <Edit />
+        </PrivateRoute>} />
+        <Route path='/mytasks' element={
+        <PrivateRoute>
+          <MyTask />
+        </PrivateRoute>} />
         <Route path='/create' element={
           <PrivateRoute>
             <Create />

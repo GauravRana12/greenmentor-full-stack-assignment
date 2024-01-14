@@ -4,6 +4,7 @@ const UserModel = require("../Modals/User.Model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { Authenticate } = require("../Middleware/Auth");
+const TaskModel = require("../Modals/Task.Model");
 
 UserRoute.post("/signup", async (req, res) => {
   try {
@@ -18,16 +19,28 @@ UserRoute.post("/signup", async (req, res) => {
   }
 });
 
+
+UserRoute.get('/',Authenticate,async (req,res)=>{
+  try {
+    const userId=req.userId;
+    const userData=await UserModel.findOne({_id:userId});
+    res.send(userData);
+  } catch (error) {
+    console.log(error);
+  }
+})
+
 UserRoute.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email,password);
     let userData = await UserModel.findOne({ email: email });
     if (!userData) {
-      return res.status(400).send("User Not Registered");
+      return res.send({message:"User Not Registered"});
     } else {
       bcrypt.compare(password, userData.password, async function (err, result) {
         if (err) {
-          return res.status(400).send("wrong password");
+          return res.send({message:"wrong password"});
         } else {
           const userObj = {
             userId: userData._id,
@@ -46,6 +59,7 @@ UserRoute.patch('/change/:Id',Authenticate,async (req,res)=>{
     try {
         let {Id}=req.params;
         const input=req.body;
+        const task=await TaskModel.updateMany({authorId:Id},{$set : {profileImg:input.image}})
         await UserModel.findByIdAndUpdate(Id,input);
         res.send('updated successfully');
     } catch (error) {

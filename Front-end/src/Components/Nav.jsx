@@ -1,22 +1,34 @@
-
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useNavigate } from 'react-router-dom'
+import { Fragment, useEffect } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 import { TfiWrite } from "react-icons/tfi";
+import { useDispatch, useSelector } from "react-redux";
+import { Loggingout, getLoginUser } from "../Redux/LoginReducer/loginAction";
 
 const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Completed', href: '/', current: false }
-]
+  { name: "Home", href: "/", current: true },
+  { name: "My Task", href: "/mytasks", current: false },
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 const Nav = () => {
   const navigate = useNavigate();
- 
+  const state = useSelector((state) => state.LoginReducer);
+  console.log("state",state);
+const dispatch=useDispatch();
+
+useEffect(() => {
+  const token=localStorage.getItem('token');
+  if(token){
+    dispatch(getLoginUser(token));
+  }
+}, [])
+
+
   return (
     <Disclosure as="nav" className="bg-gray-100">
       {({ open }) => (
@@ -38,7 +50,8 @@ const Nav = () => {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <img
-                    className="h-8 w-auto"
+                    onClick={() => navigate("/")}
+                    className="h-8 w-auto cursor-pointer"
                     src="https://static.vecteezy.com/system/resources/thumbnails/002/986/080/small/letter-g-logo-design-template-free-vector.jpg"
                     alt="Your Company"
                   />
@@ -48,12 +61,12 @@ const Nav = () => {
                     {navigation.map((item) => (
                       <button
                         key={item.name}
-                        onClick={()=>navigate(item.href)}
+                        onClick={() => navigate(item.href)}
                         className={classNames(
-                          'text-black hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
+                          "text-black hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium"
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
                       </button>
@@ -64,15 +77,13 @@ const Nav = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
-                    onClick={()=>navigate('/create')}
+                  onClick={() => navigate("/create")}
                   className="relative flex gap-2 rounded-full p-1 "
                 >
                   <span className="absolute -inset-1.5" />
-                  
-                  <TfiWrite style={{width:'28px',
-                  height:'25px'
-                  }} />
-                  <span className='font-semibold'>Write</span>
+
+                  <TfiWrite style={{ width: "28px", height: "25px" }} />
+                  <span className="font-semibold">Write</span>
                 </button>
 
                 {/* Profile dropdown */}
@@ -83,7 +94,7 @@ const Nav = () => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={state.userData.image && state.isAuth ? state.userData.image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw0aM3e1KiLqkxPxGxD54M1s6trGwPUSKzBPY4rgyvHA&s"}
                         alt=""
                       />
                     </Menu.Button>
@@ -98,27 +109,53 @@ const Nav = () => {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your Profile
-                          </button>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item >
-                        {({ active }) => (
-                          <button
-                          
+                      
+
+                      {state.isAuth ? (
+                        <>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
                             onClick={()=>navigate('/profile')}
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Sign out
-                          </button>
-                        )}
-                      </Menu.Item>
+                              
+                              className={classNames(
+                                active ? "bg-gray-100 w-full" : "",
+                                "block px-4 py-2 w-full text-sm text-gray-700"
+                              )}
+                            >
+                              Your profile
+                            </button>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={()=>dispatch(Loggingout)}
+                              className={classNames(
+                                active ? "bg-gray-100 w-full" : "",
+                                "block px-4 py-2 w-full text-sm text-gray-700"
+                              )}
+                            >
+                              Sign out
+                            </button>
+                          )}
+                        </Menu.Item>
+                        </>
+                      ) : (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={() => navigate("/login")}
+                              className={classNames(
+                                active ? "bg-gray-100 w-full" : "",
+                                "block px-4 py-2 w-full text-sm text-gray-700"
+                              )}
+                            >
+                              Sign In
+                            </button>
+                          )}
+                        </Menu.Item>
+                      )}
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -134,10 +171,12 @@ const Nav = () => {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block rounded-md px-3 py-2 text-base font-medium"
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
