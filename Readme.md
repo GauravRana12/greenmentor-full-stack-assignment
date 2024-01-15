@@ -17,7 +17,7 @@ You may also see any lint errors in the console.
 
 <h2>Backend is already deployed, No need to run it locally because it will require changes in BaseUrl</h2>
 
-<h2>Functionality of application -</h2>
+<h2>Functionalites of application -</h2>
 <h3>Task Management</h3>
     <ul>
         <li><strong>Display List of Tasks:</strong> View a list of tasks.</li>
